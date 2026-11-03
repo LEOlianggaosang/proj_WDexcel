@@ -66,74 +66,74 @@ RT_ID = [('进水排水\n', RED), ('（边进边排-进完跳步）', RED), ('\n
 # sw：'all'=全组全开 | int=沿用原干燥段第 n 行的开关矩阵 | ('or',a,b)=并集 | ('and',a,b)=交集
 # mark：None=无 | 'Y'=黄（前移区） | 'G'=绿（后移区）；red=True → C 列描述整格红字
 #
-# 索引对照（输入＝V20 回退后的成品一干燥段）：
-#   Intensive   0静止600 1排水45 2再生0.5L 3风机2100[all] 4风机1200[ED] 5~8 前移
-#   Glass       0静止600 1排水45 2再生0.5L 3风机1200[all] 4风机1500[5组] 5风机1200[Energy]
-#               6风机1200[ED] 7~10 前移
-#   89Mins      0排水30 1再生0.5L 2风机900[6组] 3风机600[ED,Express] 4风机600[ED] 5~8 前移
-#   Self-clean  0排水30 1再生0.5L 2风机1200[all] 3~6 前移
+# 索引对照（输入＝含「静止（再生间隔）」预留行的成品一干燥段）：
+#   Intensive   0静止600 1排水45 2再生0.5L 3预留0[all] 4风机2100[all] 5风机1200[ED] 6~9 前移
+#   Glass       0静止600 1排水45 2再生0.5L 3预留0[all] 4风机1200[all] 5风机1500[5组]
+#               6风机1200[Energy] 7风机1200[ED] 8~11 前移
+#   89Mins      0排水30 1再生0.5L 2预留0[all] 3风机900[6组] 4风机600[ED,Express] 5风机600[ED] 6~9 前移
+#   Self-clean  0排水30 1再生0.5L 2预留0[all] 3风机1200[all] 4~7 前移
 DRY = {
     'Intensive ': [
         dict(desc='静止', param=600, cd=10, sw=0, mark=None, red=False),
         dict(desc='排水', param=45, cd=1, sw=1, mark=None, red=False),
         dict(desc='再生进水（非再生跳步）', param='0.5L', cd=0, sw=2, mark='Y', red=True, rt=RT_RW),
-        dict(desc='静止（再生间隔）', param=480, cd=8, sw='all', mark='Y', red=True),
-        dict(desc='进水排水（边进边排-进完跳步）（非再生跳步）', param='2L', cd=1, sw=5,
+        dict(desc='静止（再生间隔）', param=480, cd=8, sw=3, mark='Y', red=True),
+        dict(desc='进水排水（边进边排-进完跳步）（非再生跳步）', param='2L', cd=1, sw=6,
              mark='Y', red=True, rt=RT_ID),
-        dict(desc='排水', param=10, cd=0, sw=6, mark='Y', red=False),
-        dict(desc='进水排水（边进边排-进完跳步）（非再生跳步）', param='2L', cd=1, sw=7,
+        dict(desc='排水', param=10, cd=0, sw=7, mark='Y', red=False),
+        dict(desc='进水排水（边进边排-进完跳步）（非再生跳步）', param='2L', cd=1, sw=8,
              mark='Y', red=True, rt=RT_ID),
-        dict(desc='排水', param=45, cd=1, sw=8, mark='Y', red=False),
+        dict(desc='排水', param=45, cd=1, sw=9, mark='Y', red=False),
         dict(desc='自动开门/静止', param=120, cd=2, sw='all', mark='G', red=True),
-        dict(desc='自动开门静止/风机', param=1500, cd=25, sw=3, mark='G', red=True),
-        dict(desc='自动开门静止/风机', param=1200, cd=20, sw=4, mark='G', red=True),
+        dict(desc='自动开门静止/风机', param=1500, cd=25, sw=4, mark='G', red=True),
+        dict(desc='自动开门静止/风机', param=1200, cd=20, sw=5, mark='G', red=True),
     ],
     'Glass ': [
         dict(desc='静止', param=600, cd=10, sw=0, mark=None, red=False),
         dict(desc='排水', param=45, cd=1, sw=1, mark=None, red=False),
         dict(desc='再生进水（非再生跳步）', param='0.5L', cd=0, sw=2, mark='Y', red=True, rt=RT_RW),
-        dict(desc='静止（再生间隔）', param=480, cd=8, sw='all', mark='Y', red=True),
-        dict(desc='进水排水（边进边排-进完跳步）（非再生跳步）', param='2L', cd=1, sw=7,
+        dict(desc='静止（再生间隔）', param=480, cd=8, sw=3, mark='Y', red=True),
+        dict(desc='进水排水（边进边排-进完跳步）（非再生跳步）', param='2L', cd=1, sw=8,
              mark='Y', red=True, rt=RT_ID),
-        dict(desc='排水', param=10, cd=0, sw=8, mark='Y', red=False),
-        dict(desc='进水排水（边进边排-进完跳步）（非再生跳步）', param='2L', cd=1, sw=9,
+        dict(desc='排水', param=10, cd=0, sw=9, mark='Y', red=False),
+        dict(desc='进水排水（边进边排-进完跳步）（非再生跳步）', param='2L', cd=1, sw=10,
              mark='Y', red=True, rt=RT_ID),
-        dict(desc='排水', param=45, cd=1, sw=10, mark='Y', red=False),
+        dict(desc='排水', param=45, cd=1, sw=11, mark='Y', red=False),
         dict(desc='自动开门/静止', param=120, cd=2, sw='all', mark='G', red=True),
         dict(desc='自动开门静止/风机', param=600, cd=10, sw='all', mark='G', red=True),
-        dict(desc='自动开门静止/风机', param=1500, cd=25, sw=4, mark='G', red=True),
-        dict(desc='自动开门静止/风机', param=1200, cd=20, sw=5, mark='G', red=True),
+        dict(desc='自动开门静止/风机', param=1500, cd=25, sw=5, mark='G', red=True),
         dict(desc='自动开门静止/风机', param=1200, cd=20, sw=6, mark='G', red=True),
+        dict(desc='自动开门静止/风机', param=1200, cd=20, sw=7, mark='G', red=True),
     ],
     '89Mins': [
         dict(desc='排水', param=30, cd=0, sw=0, mark=None, red=False),
         dict(desc='再生进水（非再生跳步）', param='0.5L', cd=0, sw=1, mark='Y', red=True, rt=RT_RW),
-        dict(desc='静止（再生间隔）', param=480, cd=8, sw='all', mark='Y', red=True),
-        dict(desc='进水排水（边进边排-进完跳步）（非再生跳步）', param='2L', cd=1, sw=5,
+        dict(desc='静止（再生间隔）', param=480, cd=8, sw=2, mark='Y', red=True),
+        dict(desc='进水排水（边进边排-进完跳步）（非再生跳步）', param='2L', cd=1, sw=6,
              mark='Y', red=True, rt=RT_ID),
-        dict(desc='排水', param=10, cd=0, sw=6, mark='Y', red=False),
-        dict(desc='进水排水（边进边排-进完跳步）（非再生跳步）', param='2L', cd=0, sw=7,
+        dict(desc='排水', param=10, cd=0, sw=7, mark='Y', red=False),
+        dict(desc='进水排水（边进边排-进完跳步）（非再生跳步）', param='2L', cd=0, sw=8,
              mark='Y', red=True, rt=RT_ID),
-        dict(desc='排水', param=45, cd=1, sw=8, mark='Y', red=False),
+        dict(desc='排水', param=45, cd=1, sw=9, mark='Y', red=False),
         dict(desc='自动开门/静止', param=120, cd=2, sw='all', mark='G', red=True),
         # 公因式提取：600·A + 600·B = 600·全开关 + 600·{ED}
         #   风机900[A=6组] −600 → 300[A]；风机600[B=ED,Express] −600 → 0（行删除）
         #   风机600[C=ED] 吸收交集部分 → 1200[ED]（原两行 ED 合并）
-        dict(desc='自动开门静止/风机', param=300, cd=5, sw=2, mark='G', red=True),
-        dict(desc='自动开门静止/风机', param=1200, cd=20, sw=4, mark='G', red=True),
+        dict(desc='自动开门静止/风机', param=300, cd=5, sw=3, mark='G', red=True),
+        dict(desc='自动开门静止/风机', param=1200, cd=20, sw=5, mark='G', red=True),
     ],
     'Self-cleaning': [
         dict(desc='排水', param=30, cd=0, sw=0, mark=None, red=False),
         dict(desc='再生进水（非再生跳步）', param='0.5L', cd=0, sw=1, mark='Y', red=True, rt=RT_RW),
-        dict(desc='静止（再生间隔）', param=480, cd=8, sw='all', mark='Y', red=True),
-        dict(desc='进水排水（边进边排-进完跳步）（非再生跳步）', param='2L', cd=1, sw=3,
+        dict(desc='静止（再生间隔）', param=480, cd=8, sw=2, mark='Y', red=True),
+        dict(desc='进水排水（边进边排-进完跳步）（非再生跳步）', param='2L', cd=1, sw=4,
              mark='Y', red=True, rt=RT_ID),
-        dict(desc='排水', param=10, cd=0, sw=4, mark='Y', red=False),
-        dict(desc='进水排水（边进边排-进完跳步）（非再生跳步）', param='2L', cd=1, sw=5,
+        dict(desc='排水', param=10, cd=0, sw=5, mark='Y', red=False),
+        dict(desc='进水排水（边进边排-进完跳步）（非再生跳步）', param='2L', cd=1, sw=6,
              mark='Y', red=True, rt=RT_ID),
-        dict(desc='排水', param=45, cd=1, sw=6, mark='Y', red=False),
+        dict(desc='排水', param=45, cd=1, sw=7, mark='Y', red=False),
         dict(desc='自动开门/静止', param=120, cd=2, sw='all', mark='G', red=True),
-        dict(desc='自动开门静止/风机', param=600, cd=10, sw=2, mark='G', red=True),
+        dict(desc='自动开门静止/风机', param=600, cd=10, sw=3, mark='G', red=True),
     ],
 }
 
@@ -185,8 +185,11 @@ def fmt_hmm(m):
 
 # ================================================================ 【1】清除第二步的更改强调（Q3）
 def clear_marks(wb):
-    say('\n【1】清除第二步更改强调（六表本体区，填充与红字恢复正常；双列区不动）')
+    say('\n【1】清除第二步更改强调（六表本体区 A..motor：填充 + 单元格红字 + 富文本红块）')
+    say('    （V27 2026-11-03 用户纠错：定温加热行不再跳过——倒计时红随描述在【5】重生，')
+    say('     与本体区标记无关；富文本红块属第二步更改强调，一并转纯文本清除）')
     tot = 0
+    rt = 0
     for n in CFG:
         if n not in wb.sheetnames:
             continue
@@ -196,6 +199,13 @@ def clear_marks(wb):
         for r in range(cfg['r0'], (rows[-1] if rows else cfg['r0']) + 1):
             for c in range(1, cfg['motor'] + 1):
                 cell = ws.cell(r, c)
+                # 富文本（V8 重建行）里的红块：cell.font.color 查不到，必须整体转纯文本
+                if isinstance(cell.value, CellRichText):
+                    cell.value = str(cell.value)
+                    fo = cell.font
+                    cell.font = Font(name=fo.name or '微软雅黑', size=fo.size or 10,
+                                     bold=fo.bold, italic=fo.italic)
+                    rt += 1
                 f = cell.fill
                 if f and f.patternType:
                     cell.fill = NO_FILL
@@ -206,7 +216,17 @@ def clear_marks(wb):
                     cell.font = Font(name=fo.name or '微软雅黑', size=fo.size or 10,
                                      bold=fo.bold, italic=fo.italic)
                     tot += 1
-    say('  清除 %d 处（本体区 A..motor）' % tot)
+        # 底部第二步红字备注（若有残留）一并清除
+        if rows:
+            for r in range(rows[-1] + 1, ws.max_row + 1):
+                v = ws.cell(r, 1).value
+                if v not in (None, ''):
+                    fo = ws.cell(r, 1).font
+                    if fo.color and fo.color.type == 'rgb' and str(fo.color.value) == RED \
+                            and '自动门' not in norm(v):
+                        ws.cell(r, 1).value = None
+                        tot += 1
+    say('  清除填充/红字 %d 处；富文本转纯文本 %d 格' % (tot, rt))
 
 
 # ================================================================ 【2】干燥段重建
@@ -405,9 +425,14 @@ def build_dual(wb):
                     ws.cell(r, c1).fill = NO_FILL
                     ws.cell(r, c2).fill = NO_FILL
                     ws.cell(r, c1).value = c if v else None
-                    ws.cell(r, c2).value = '1/end' if is_last else '%d/%s' % (v, fmt_hmm(total - c))
+                    # 终行 = 本步耗时/end（2026-11-03 纠错：不再是固定 1/end）
+                    ws.cell(r, c2).value = ('%d/end' % v) if is_last \
+                        else '%d/%s' % (v, fmt_hmm(total - c))
                 d = norm(ws.cell(r, 3).value)
                 v2 = ws.cell(r, c2).value
+                # V26 颜色规则（用户 2026-11-03 纠错）——只给倒计时列 c2 上色，累计列 c1 恒黑：
+                #   绿 = end；蓝 = 描述含「进水」（实机进水提醒开水）；
+                #   红 = 描述含「定温加热」（实机加热提醒变温），不随黄填充
                 col = None
                 if v2 in (None, ''):
                     col = None
@@ -415,14 +440,12 @@ def build_dual(wb):
                     col = GREEN
                 elif '进水' in d:
                     col = BLUE
-                else:
-                    f = ws.cell(r, 3).fill
-                    if f and f.patternType and f.fgColor and f.fgColor.type == 'rgb' \
-                            and str(f.fgColor.value) == YELLOW:
-                        col = RED
+                elif '定温加热' in d:
+                    col = RED
                 for cc in (c1, c2):
                     cell = ws.cell(r, cc)
-                    cell.font = Font(name='微软雅黑', size=10, color=Color(rgb=col) if col else None)
+                    c_color = Color(rgb=col) if (col and cc == c2) else None
+                    cell.font = Font(name='微软雅黑', size=10, color=c_color)
                     cell.border = NO_BORDER if r > cfg['tot_row'] else THIN_BORDER
                     cell.alignment = Alignment(horizontal='center', vertical='center')
         say('  %-14s 双列区 %d 组' % (n, ngrp))

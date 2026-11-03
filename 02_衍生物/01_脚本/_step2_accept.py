@@ -269,12 +269,45 @@ def revert_dry_static(wb):
                 break
         say('  %-14s 静止→风机 %d 行；合并 %d 处；块内标记已清除'
             % (n, n_st, n_mg))
-        if n_mg:
-            touched.append(n)
+        # --- 3) 显式预留「静止（再生间隔）」行（用户 2026-11-03 纠错：
+        #        配时 0 也要列出，红字黄填充）。位置＝再生进水行之后。
+        rows = data_rows(ws, r0)
+        regen = next((r for r in rows if norm(ws.cell(r, 3).value).startswith('再生进水')), None)
+        has = any(norm(ws.cell(r, 3).value) == '静止（再生间隔）' for r in rows)
+        if regen is not None and not has:
+            # 先拆与再生行及之后相交的 B 合并区（干燥段合并的起点可能早于再生行，
+            # 判 m.max_row >= regen 才不会漏；insert_rows 会挪动合并区，先拆后插）
+            for m in list(ws.merged_cells.ranges):
+                if m.min_col == 2 and m.max_row >= regen:
+                    ws.unmerge_cells(str(m))
+            for r2 in range(regen, rows[-1] + 1):
+                ws.cell(r2, 2).value = None
+            ins = regen + 1
+            ws.insert_rows(ins)
+            for g in range(nsw):
+                ws.cell(ins, sw0 + g).value = 1
+            ws.cell(ins, 3).value = '静止（再生间隔）'
+            ws.cell(ins, 4).value = 0
+            ws.cell(ins, cd).value = 0
+            ws.cell(ins, motor).value = '静止'
+            for c in range(1, motor + 1):
+                cell = ws.cell(ins, c)
+                cell.font = Font(name='微软雅黑', size=10,
+                                 color=Color(rgb=RED) if c in (3, 4) else None)
+                cell.fill = PatternFill('solid', fgColor=Color(rgb=YELLOW)) \
+                    if c in (3, 4) else PatternFill()
+                cell.border = THIN_BORDER
+                cell.alignment = Alignment(horizontal='center', vertical='center',
+                                           wrap_text=(c == 3))
+            h = ws.row_dimensions[regen].height
+            ws.row_dimensions[ins].height = h if h is not None else 33.0
+            say('  %-14s r%-3d 插入「静止（再生间隔）」预留行（配时0，红字黄填充）'
+                % (n, ins))
+        touched.append(n)
     if REGEN_INTERVAL_MIN:
-        say('  ⚠ REGEN_INTERVAL_MIN=%d —— 拆分逻辑尚未接入，需先在 V20 实现' % REGEN_INTERVAL_MIN)
+        say('  ⚠ REGEN_INTERVAL_MIN=%d —— 拆分逻辑尚未接入，预留行按 0 配时列出' % REGEN_INTERVAL_MIN)
     else:
-        say('  再生间隔策略 N=0 → 不拆出「静止（再生间隔）」，干燥段无新增标记')
+        say('  再生间隔策略 N=0 → 预留行按 0 配时显式列出（用户 2026-11-03 纠错）')
     return touched
 
 
@@ -305,6 +338,10 @@ def fix_values(wb):
                     say('  [参数]   %s r%-3d %s → %s' % (n, r, p, ws.cell(r, 4).value))
     say('  V14 风机 ×%d；V15 参数 ×%d（全工作簿）' % (n14, n15))
     # V16 干燥前最后一次加热 → 温达跳步（cd 不变，总时长守恒）
+    # V28 修正定义（2026-11-03 用户纠错）：不是「整表最后一行加热」，而是
+    # 「每个分组/叠加功能（E–K 七列含 MoreRin/MorePre）各自到达干燥前的
+    # 最后一次定温加热」都转跳步——热漂核心机制：温达即跳入干燥，余温提效。
+    # 当日由 _fix_last_heat.py 以通用分组判定对成品一补齐 5 行（89Mins r42–r46）。
     for n, src_cd in [('89Mins', 12), ('Self-cleaning', 6)]:
         ws = wb[n]
         rows = [r for r in data_rows(ws, CFG[n]['r0']) if '加热' in norm(ws.cell(r, 3).value)]
@@ -462,6 +499,53 @@ def unify_format(wb):
     say('  修补 %d 处（宋体11/无边框）' % n_fix)
 
 
+# ================================================================ 双列区：数值重算
+def fmt_hmm(m):
+    m = int(max(m, 0))
+    return '%d:%02d' % (m // 60, m % 60)
+
+
+def rebuild_dual_values(wb):
+    """V20 删行/插行后，cols 阶段算好的双列区数值已陈旧（累计/倒计时错位），
+    此处按最终本体逐组重算。终行 = 「本步耗时/end」（用户 2026-11-03 纠错，
+    不再固定写 1/end）；终行按「该组最后执行的行」判定。"""
+    say('\n【7a】双列区数值重算（累计/倒计时/end 耗时）')
+    for n in CFG:
+        ws = wb[n]
+        cfg = CFG[n]
+        out0, ngrp, r0 = cfg['motor'] + 1, cfg['ngrp'], cfg['r0']
+        rows = data_rows(ws, r0)
+        if not rows:
+            continue
+        for g in range(ngrp):
+            swc = cfg['sw0'] + g
+            c1, c2 = out0 + g * 2, out0 + g * 2 + 1
+            total = ws.cell(cfg['tot_row'], swc).value
+            if not isinstance(total, (int, float)):
+                continue
+            total = int(total)
+            cum, on_rows = 0, []
+            for r in rows:
+                v = ws.cell(r, cfg['cd']).value
+                v = v if isinstance(v, (int, float)) else 0
+                if ws.cell(r, swc).value not in (None, ''):
+                    cum += v
+                    on_rows.append((r, v, cum))
+            c_at = {rr: cc for rr, vv, cc in on_rows}
+            last_r = on_rows[-1][0] if on_rows else None
+            for r in rows:
+                if ws.cell(r, swc).value in (None, ''):
+                    ws.cell(r, c1).value = None
+                    ws.cell(r, c2).value = None
+                else:
+                    v = ws.cell(r, cfg['cd']).value
+                    v = v if isinstance(v, (int, float)) else 0
+                    ws.cell(r, c1).value = c_at[r] if v else None
+                    ws.cell(r, c2).value = ('%d/end' % v) if r == last_r \
+                        else '%d/%s' % (v, fmt_hmm(total - c_at[r]))
+        say('  %-14s 双列区 %d 组重算' % (n, ngrp))
+
+
 # ================================================================ 双列区：去框线 + 红蓝绿
 def dual_zone(wb):
     say('\n【7】双列区：数据行去框线（V10）+ 倒计时列颜色（V9）')
@@ -492,15 +576,12 @@ def dual_zone(wb):
                 if is_last or str(v2).endswith('/end'):
                     col = GREEN
                     stats['绿'] += 1
-                elif '进水' in d:            # 进水/再生进水风机/冷风进水排水
+                elif '进水' in d:            # 蓝=实机进水提醒开水（含再生进水/冷风进水排水）
                     col = BLUE
                     stats['蓝'] += 1
-                else:
-                    f = ws.cell(r, 3).fill
-                    if f and f.patternType and f.fgColor and f.fgColor.type == 'rgb' \
-                            and str(f.fgColor.value) == YELLOW:
-                        col = RED            # 温达剩洗/跳步/静止特例
-                        stats['红'] += 1
+                elif '定温加热' in d:        # 红=定温加热提醒变温（V26 用户 2026-11-03 纠错：
+                    col = RED                #     红随定温加热描述，不随黄填充）
+                    stats['红'] += 1
                 ws.cell(r, c2).font = Font(name='微软雅黑', size=10,
                                            color=Color(rgb=col) if col else None)
                 ws.cell(r, c1).font = Font(name='微软雅黑', size=10)
@@ -688,12 +769,14 @@ def main():
     fix_values(wb)
     fix_rinse_heat(wb)
     clear_tail_notes(wb)
-    touched = revert_dry_static(wb)          # V20：会删行，必须在序号重排与阶段重建之前
-    renumber(wb, ['89Mins', 'Self-cleaning'] + touched)
-    rebuild_stage(wb, ['89Mins', 'Self-cleaning'] + touched)
+    touched = revert_dry_static(wb)          # V20：会删行/插行，必须在序号重排与阶段重建之前
+    touched = list(dict.fromkeys(['89Mins', 'Self-cleaning'] + touched))
+    renumber(wb, touched)
+    rebuild_stage(wb, touched)
     special_static(wb)
     rebuild_rich_text(wb)
     unify_format(wb)
+    rebuild_dual_values(wb)                   # V20 结构改动后双列区数值必须重算
     dual_zone(wb)
     fix_alignment(wb)
     housekeeping(wb)

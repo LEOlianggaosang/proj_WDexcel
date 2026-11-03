@@ -112,6 +112,9 @@ def classify(desc):
         return 'REGEN', GREEN, 'ROW', 'D_CD'
     if '冷风进水排水' in d:
         return 'COOL', GREEN, 'ROW', 'D_CD'
+    if d == '静止（再生间隔）':
+        # 再生间隔策略预留行（V20，配时可为 0）：黄 C–D + 红字 C,D（用户 2026-11-03 纠错）
+        return 'REGEN_INTERVAL', YELLOW, 'CD', 'CD'
     if d == '静止' or re.match(r'^风机', d):
         # 干燥段的静止/风机：模板标法不统一（Intensive r61/62 红、Glass r48 不红）→ 判为「不托管」，
         # 保留原样不机械改写。89Mins 的静止另有用户裁决，走 SPECIAL_STATIC。

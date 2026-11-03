@@ -162,7 +162,8 @@ def build(ws, sheet, log):
                 ws.cell(r, c1).fill = NO_FILL
                 ws.cell(r, c2).fill = NO_FILL
                 ws.cell(r, c1).value = c if v else None
-                ws.cell(r, c2).value = '1/end' if is_last else '%d/%s' % (v, fmt_hmm(total - c))
+                # 终行 = 本步耗时/end（2026-11-03 纠错：不再是固定 1/end）
+                ws.cell(r, c2).value = ('%d/end' % v) if is_last else '%d/%s' % (v, fmt_hmm(total - c))
             for cc in (c1, c2):
                 cell = ws.cell(r, cc)
                 edge = (cc == c2 and on and is_last)
