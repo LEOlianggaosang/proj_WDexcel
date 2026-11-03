@@ -1,0 +1,94 @@
+<svg viewBox="0 0 680 474" width="100%" role="img" xmlns="http://www.w3.org/2000/svg">
+<title>柜机时序表领域模型</title>
+<desc>三条文档边界、概念层级与横向分段、以及四类参数形式与倒计时配时的关系。</desc>
+<style>
+.t { font-family: "Microsoft YaHei","PingFang SC",sans-serif; font-size:13px; font-weight:400; fill:#2C2C2A; }
+.th { font-family: "Microsoft YaHei","PingFang SC",sans-serif; font-size:14px; font-weight:500; fill:#2C2C2A; }
+.ts { font-family: "Microsoft YaHei","PingFang SC",sans-serif; font-size:12px; font-weight:400; fill:#5F5E5A; }
+.box { fill:#F1EFE8; stroke:#B4B2A9; }
+.cb { fill:#E6F1FB; stroke:#378ADD; }
+.cbt { fill:#0C447C; }
+.cbs { fill:#185FA5; }
+text { dominant-baseline: central; }
+</style>
+<rect x="0" y="0" width="680" height="474" fill="#FFFFFF"/>
+<text class="ts" x="40" y="20">① 三条文档线</text>
+<g>
+<rect class="cb" x="40" y="32" width="192" height="52" rx="10" stroke-width="0.5"/>
+<text class="th cbt" x="52" y="50">时序表</text>
+<text class="ts cbs" x="52" y="68">电控洗涤过程本体 · 本次范围</text>
+</g>
+<g>
+<rect class="box" x="244" y="32" width="192" height="52" rx="10" stroke-width="0.5" stroke-dasharray="4 3"/>
+<text class="th" x="256" y="50">规格书</text>
+<text class="ts" x="256" y="68">面板交互规则与运行逻辑</text>
+</g>
+<g>
+<rect class="box" x="448" y="32" width="192" height="52" rx="10" stroke-width="0.5" stroke-dasharray="4 3"/>
+<text class="th" x="460" y="50">衍生物</text>
+<text class="ts" x="460" y="68">双列区 · 实机跑机对照</text>
+</g>
+<text class="ts" x="40" y="102">② 层级与横向分段</text>
+<g>
+<rect class="box" x="40" y="112" width="132" height="52" rx="10" stroke-width="0.5"/>
+<text class="th" x="52" y="130">本机型</text>
+<text class="ts" x="52" y="148">工作簿 · 标题行</text>
+<rect class="box" x="196" y="112" width="132" height="52" rx="10" stroke-width="0.5"/>
+<text class="th" x="208" y="130">洗涤菜单</text>
+<text class="ts" x="208" y="148">sheet 标签</text>
+<rect class="box" x="352" y="112" width="132" height="52" rx="10" stroke-width="0.5"/>
+<text class="th" x="364" y="130">洗涤阶段</text>
+<text class="ts" x="364" y="148">B 列 · 合并四段</text>
+<rect class="box" x="508" y="112" width="132" height="52" rx="10" stroke-width="0.5"/>
+<text class="th" x="520" y="130">洗涤步骤</text>
+<text class="ts" x="520" y="148">A 列 · 一行一步</text>
+</g>
+<g stroke="#888780" stroke-width="1.5" fill="none">
+<path d="M176 138L192 138"/>
+<path d="M332 138L348 138"/>
+<path d="M488 138L504 138"/>
+<path d="M188 133L192 138L188 143"/>
+<path d="M344 133L348 138L344 143"/>
+<path d="M500 133L504 138L500 143"/>
+</g>
+<g>
+<rect class="cb" x="40" y="180" width="260" height="52" rx="10" stroke-width="0.5"/>
+<text class="th cbt" x="52" y="198">A–D 本体</text>
+<text class="ts cbs" x="52" y="216">序号 · 阶段 · 描述 C · 参数 D</text>
+</g>
+<g>
+<rect class="box" x="304" y="180" width="176" height="52" rx="10" stroke-width="0.5"/>
+<text class="th" x="316" y="198">E–K 电控可选功能</text>
+<text class="ts" x="316" y="216">决定时序与总时长</text>
+<rect class="box" x="484" y="180" width="88" height="52" rx="10" stroke-width="0.5"/>
+<text class="th" x="496" y="198">L 配时</text>
+<text class="ts" x="496" y="216">分钟 · 上下限</text>
+<rect class="box" x="576" y="180" width="64" height="52" rx="10" stroke-width="0.5" stroke-dasharray="4 3"/>
+<text class="th" x="588" y="198">M 双速</text>
+<text class="ts" x="588" y="216">预留项</text>
+</g>
+<text class="ts" x="40" y="250">③ 参数四类形式 → 倒计时配时</text>
+<g>
+<rect class="box" x="40" y="260" width="292" height="84" rx="10" stroke-width="0.5"/>
+<text class="th" x="52" y="278">纯数字</text>
+<text class="ts" x="52" y="296">排水 30 · 洗涤 600 · 静止 1500</text>
+<text class="ts" x="52" y="314">语义：动作时长，单位秒</text>
+<text class="t" x="52" y="331">倒计时 ≈ 秒 ÷ 60，但有取整差异</text>
+<rect class="box" x="348" y="260" width="292" height="84" rx="10" stroke-width="0.5"/>
+<text class="th" x="360" y="278">数字 L</text>
+<text class="ts" x="360" y="296">进水 3.9L · 再生进水风机 0.5L</text>
+<text class="ts" x="360" y="314">语义：目标水量，到位即完成</text>
+<text class="t" x="360" y="331">倒计时按流量估，通常记作 1 分</text>
+<rect class="box" x="40" y="352" width="292" height="84" rx="10" stroke-width="0.5"/>
+<text class="th" x="52" y="370">T数字 / 数字</text>
+<text class="ts" x="52" y="388">T50 / 360 · 温达剩洗</text>
+<text class="ts" x="52" y="406">语义：目标温度 / 本步时间上限</text>
+<text class="t" x="52" y="423">倒计时 = 360 ÷ 60 = 6 分</text>
+<rect class="box" x="348" y="352" width="292" height="84" rx="10" stroke-width="0.5"/>
+<text class="th" x="360" y="370">纯 T数字</text>
+<text class="ts" x="360" y="388">T69 · 温达跳步</text>
+<text class="ts" x="360" y="406">语义：只给温度，温达即跳</text>
+<text class="t" x="360" y="423">倒计时 = 人工配时的防失控上限</text>
+</g>
+<text class="ts" x="40" y="456">M 列双速电机是预留项，当前机型无此配置，与风机无关；本体原样保留，不参与双列区推导。</text>
+</svg>

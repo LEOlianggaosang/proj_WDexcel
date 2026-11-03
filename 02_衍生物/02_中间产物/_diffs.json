@@ -1,0 +1,182 @@
+{
+  "diffs": [
+    {
+      "sheet": "Intensive ",
+      "group": "Null",
+      "kind": "双列生成",
+      "total": 170,
+      "end_value": 170,
+      "note": "累计终值 170 == 总时长"
+    },
+    {
+      "sheet": "Intensive ",
+      "group": "ExtraDry",
+      "kind": "双列生成",
+      "total": 190,
+      "end_value": 190,
+      "note": "累计终值 190 == 总时长"
+    },
+    {
+      "sheet": "Intensive ",
+      "group": "Energy",
+      "kind": "双列生成",
+      "total": 140,
+      "end_value": 140,
+      "note": "累计终值 140 == 总时长"
+    },
+    {
+      "sheet": "Intensive ",
+      "group": "Express",
+      "kind": "双列生成",
+      "total": 145,
+      "end_value": 145,
+      "note": "累计终值 145 == 总时长"
+    },
+    {
+      "sheet": "Intensive ",
+      "group": "StrWash",
+      "kind": "双列生成",
+      "total": 185,
+      "end_value": 185,
+      "note": "累计终值 185 == 总时长"
+    },
+    {
+      "sheet": "Glass ",
+      "group": "Null",
+      "kind": "双列生成",
+      "total": 130,
+      "end_value": 130,
+      "note": "累计终值 130 == 总时长"
+    },
+    {
+      "sheet": "Glass ",
+      "group": "ExtraDry",
+      "kind": "双列生成",
+      "total": 150,
+      "end_value": 150,
+      "note": "累计终值 150 == 总时长"
+    },
+    {
+      "sheet": "Glass ",
+      "group": "Energy",
+      "kind": "双列生成",
+      "total": 115,
+      "end_value": 115,
+      "note": "累计终值 115 == 总时长"
+    },
+    {
+      "sheet": "Glass ",
+      "group": "Express",
+      "kind": "总时长修正",
+      "old": 115,
+      "new": 105,
+      "note": "第4行标称与实求和不一致，已按交叉验证结果修正"
+    },
+    {
+      "sheet": "Glass ",
+      "group": "Express",
+      "kind": "双列生成",
+      "total": 105,
+      "end_value": 105,
+      "note": "累计终值 105 == 总时长"
+    },
+    {
+      "sheet": "Glass ",
+      "group": "StrWash",
+      "kind": "双列生成",
+      "total": 145,
+      "end_value": 145,
+      "note": "累计终值 145 == 总时长"
+    },
+    {
+      "sheet": "90Mins",
+      "group": "Null",
+      "kind": "双列生成",
+      "total": 90,
+      "end_value": 90,
+      "note": "累计终值 90 == 总时长"
+    },
+    {
+      "sheet": "90Mins",
+      "group": "ExtraDry",
+      "kind": "双列生成",
+      "total": 120,
+      "end_value": 120,
+      "note": "累计终值 120 == 总时长"
+    },
+    {
+      "sheet": "90Mins",
+      "group": "Energy",
+      "kind": "双列生成",
+      "total": 75,
+      "end_value": 75,
+      "note": "累计终值 75 == 总时长"
+    },
+    {
+      "sheet": "90Mins",
+      "group": "Express",
+      "kind": "双列生成",
+      "total": 70,
+      "end_value": 70,
+      "note": "累计终值 70 == 总时长"
+    },
+    {
+      "sheet": "90Mins",
+      "group": "StrWash",
+      "kind": "双列生成",
+      "total": 105,
+      "end_value": 105,
+      "note": "累计终值 105 == 总时长"
+    },
+    {
+      "sheet": "90Mins",
+      "group": "(辅助列 N–T)",
+      "kind": "MINI 续行去重",
+      "note": "清除 21 个单元格公式，SUM 恢复为标称值",
+      "cells": [
+        "90Mins!N15",
+        "90Mins!O15",
+        "90Mins!P15",
+        "90Mins!Q15",
+        "90Mins!R15",
+        "90Mins!S15",
+        "90Mins!T15",
+        "90Mins!N40",
+        "90Mins!O40",
+        "90Mins!P40",
+        "90Mins!Q40",
+        "90Mins!R40"
+      ]
+    },
+    {
+      "sheet": "Self-cleaning",
+      "group": "Null",
+      "kind": "双列生成",
+      "total": 100,
+      "end_value": 100,
+      "note": "累计终值 100 == 总时长"
+    },
+    {
+      "sheet": "Glass ",
+      "group": "-",
+      "kind": "清除游离值",
+      "old": 0,
+      "new": null,
+      "note": "S1 孤立的 0"
+    }
+  ],
+  "mini": {
+    "Intensive ": [],
+    "Glass ": [],
+    "90Mins": [
+      15,
+      40,
+      43
+    ],
+    "Self-cleaning": [
+      11,
+      25,
+      28
+    ]
+  }
+}
